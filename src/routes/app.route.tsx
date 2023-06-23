@@ -2,10 +2,9 @@ import { Platform } from "react-native";
 import { createBottomTabNavigator, BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { useTheme } from "native-base";
 
-import { Home } from "@screens/Home";
+import { HomeRoutes } from "./home.route";
 import { History } from "@screens/History";
 import { Profile } from "@screens/Profile";
-import { Exercise } from "@screens/Exercise";
 
 import HomeSvg from "@assets/home.svg";
 import HistorySvg from "@assets/history.svg";
@@ -15,7 +14,6 @@ type AppRoutes = {
   home: undefined;
   history: undefined;
   profile: undefined;
-  exercise: undefined;
 };
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
@@ -40,15 +38,17 @@ export function AppRoutes() {
           height: Platform.OS === "android" ? "auto" : 96,
           paddingBottom: sizes[10],
           paddingTop: sizes[6],
-          paddingHorizontal: 36
+          paddingHorizontal: 36,
         },
       }}
     >
       <Screen
         name="home"
-        component={Home}
+        component={HomeRoutes}
         options={{
-          tabBarIcon: ({ color }) => <HomeSvg fill={color} width={iconSize} height={iconSize} />,
+          tabBarIcon: ({ color }) => (
+            <HomeSvg fill={color} width={iconSize} height={iconSize} />
+          ),
         }}
       />
       <Screen
@@ -65,7 +65,6 @@ export function AppRoutes() {
           tabBarIcon: ({ color }) => <ProfileSvg fill={color} width={iconSize} height={iconSize} />,
         }}
       />
-      <Screen name="exercise" component={Exercise} options={{ tabBarButton: () => null }} />
     </Navigator>
   );
 }
