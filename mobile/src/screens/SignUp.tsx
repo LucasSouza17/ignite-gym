@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { Platform } from "react-native";
+import { Alert, Platform } from "react-native";
 import {
   VStack,
   Image,
@@ -8,10 +8,14 @@ import {
   Heading,
   ScrollView,
   KeyboardAvoidingView,
+  useToast
 } from "native-base";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+
+import { api } from "@services/api";
+import { AppError } from "@utils/AppError";
 
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 
@@ -35,10 +39,14 @@ const signUpSchema = yup.object({
     .string()
     .required("Informe a senha")
     .min(6, "A senha deve ter pelo menos 6 dígitos"),
-  password_confirm: yup.string().required("Confirme a senha").oneOf([yup.ref('password')], 'A confirmação da senha não confere.')
+  password_confirm: yup
+    .string()
+    .required("Confirme a senha")
+    .oneOf([yup.ref("password")], "A confirmação da senha não confere."),
 });
 
 export function SignUp() {
+  const toast = useToast()
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
   const {
@@ -53,8 +61,20 @@ export function SignUp() {
     navigation.goBack();
   }
 
-  function handleSignUp({ name, email, password, password_confirm }: FormDataProps) {
-    console.log({ name, email, password, password_confirm });
+  async function handleSignUp({ name, email, password }: FormDataProps) {
+    try {
+      const response = await api.post("/users", { name, email, password });
+      console.log(response.data)
+    } catch(error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError ? error.message : 'Não foi possível criar a conta. Tente novamente mais tarde.'
+
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500',
+      })
+    }
   }
 
   return (
@@ -130,6 +150,7 @@ export function SignUp() {
                   onChangeText={onChange}
                   value={value}
                   errorMessage={errors.password?.message}
+                  textContentType="oneTimeCode"
                 />
               )}
             />
@@ -146,6 +167,7 @@ export function SignUp() {
                   onSubmitEditing={handleSubmit(handleSignUp)}
                   returnKeyType="send"
                   errorMessage={errors.password_confirm?.message}
+                  textContentType="oneTimeCode"
                 />
               )}
             />
