@@ -2,7 +2,7 @@ import { Platform } from "react-native";
 import { createBottomTabNavigator, BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { useTheme } from "native-base";
 
-import { HomeRoutes } from "./home.route";
+import { HomeRoutes } from "./home.routes";
 import { History } from "@screens/History";
 import { Profile } from "@screens/Profile";
 

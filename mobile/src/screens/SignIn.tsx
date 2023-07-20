@@ -134,6 +134,7 @@ export function SignIn() {
                   onChangeText={onChange}
                   value={value}
                   onSubmitEditing={handleSubmit(handleSignIn)}
+                  returnKeyType="join"
                   errorMessage={errors.password?.message}
                   textContentType="oneTimeCode"
                 />
