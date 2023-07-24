@@ -7,6 +7,7 @@ import { useAuth } from "@hooks/useAuth";
 import defaultUserPhotoImg from "@assets/userPhotoDefault.png";
 
 import { UserPhoto } from "./UserPhoto";
+import { api } from "@services/api";
 
 export function HomeHeader() {
   const { user, signOut } = useAuth();
@@ -16,7 +17,7 @@ export function HomeHeader() {
       <UserPhoto
         source={
           user.avatar
-            ? { uri: "https://github.com/LucasSouza17.png" }
+            ? { uri: `${api.defaults.baseURL}/avatar/${user.avatar}` }
             : defaultUserPhotoImg
         }
         alt="Avatar"
