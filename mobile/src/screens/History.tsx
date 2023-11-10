@@ -9,6 +9,8 @@ import { ScreenHeader } from "@components/ScreenHeader";
 import { HistoryCard } from "@components/HistoryCard";
 import { HistoryByDayDTO } from "@dtos/HistoryByDayDTO";
 import { Loading } from "@components/Loading";
+import { getExercisesDoneInWeek } from "@utils/getExercisesDoneInWeek";
+import { tagUserExerciseDone } from "@notifications/notificationsTags";
 
 export function History() {
   const toast = useToast();
@@ -22,6 +24,8 @@ export function History() {
 
       const response = await api.get("/history");
       setExercises(response.data);
+
+      tagUserExerciseDone(getExercisesDoneInWeek(response.data))
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError ? error.message : "Não foi possível carregar o histórico.";

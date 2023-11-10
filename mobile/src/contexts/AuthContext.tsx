@@ -9,6 +9,7 @@ import { storageUserSave, storageUserGet, storageUserRemove } from "@storage/sto
 
 import { api } from "@services/api";
 import { UserDTO } from "@dtos/UserDTO";
+import { tagUserInfoCreate, tagUserInfoRemove } from "@notifications/notificationsTags";
 
 export type AuthContextDataProps = {
   user: UserDTO;
@@ -60,6 +61,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         setIsLoadingUserStorageData(true);
 
         await storageUserAndTokenSave(data.user, data.token, data.refresh_token);
+        tagUserInfoCreate(data.user.name, data.user.email)
         userAndTokenUpdate(data.user, data.token);
       }
     } catch (error) {
@@ -76,6 +78,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
       await storageUserRemove();
       await storageAuthTokenRemove();
+      tagUserInfoRemove();
     } catch (error) {
       throw error;
     } finally {
@@ -86,6 +89,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   async function updateUserProfile(userUpdated: UserDTO) {
     try {
       setUser(userUpdated);
+      tagUserInfoCreate(userUpdated.name, userUpdated.email)
       await storageUserSave(userUpdated);
     } catch (error) {
       throw error;
@@ -101,6 +105,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
       if (token && userLogged) {
         userAndTokenUpdate(userLogged, token);
+        tagUserInfoCreate(userLogged.name, userLogged.email)
       }
     } catch (error) {
       throw error;

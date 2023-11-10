@@ -27,6 +27,7 @@ import { Button } from "@components/Button";
 import { Fragment, useEffect, useState } from "react";
 import { ExerciseDTO } from "@dtos/ExerciseDTO";
 import { Loading } from "@components/Loading";
+import { OneSignal } from "react-native-onesignal";
 
 type RouteParamsProps = {
   exerciseId: number;
